@@ -17,9 +17,18 @@ const getById = async (req, res) => {
 }
 
 const add = async (req, res) => {
+  const { name, email, phone } = req.body
+
+  if (!name || !email || !phone) {
+    return res.status(400).json({
+      message:
+        'missing required fields. Please provide name, email, and phone.',
+    })
+  }
+
   const result = await contacts.addContact(req.body)
   if (!result) {
-    throw HttpError(400, `message": "missing required name field"`)
+    throw HttpError(400, `message: missing required name field`)
   }
   res.status(201).json(result)
 }
@@ -31,7 +40,7 @@ const updateById = async (req, res) => {
   }
   const result = await contacts.updateContactById(id, req.body)
   if (!result) {
-    throw HttpError(404, 'message": "missing fields')
+    throw HttpError(404, 'message: missing fields')
   }
   res.json(result)
 }
@@ -40,7 +49,7 @@ const deleteContactById = async (req, res) => {
   const { id } = req.params
   const result = await contacts.removeContact(id)
   if (!result) {
-    throw HttpError(404, 'message": "contact deleted')
+    throw HttpError(404, 'message: Not found')
   }
   res.json({
     message: 'Delete success',
