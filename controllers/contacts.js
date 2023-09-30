@@ -31,14 +31,10 @@ const add = async (req, res) => {
 const updateById = async (req, res) => {
   const { id } = req.params
 
-  if (!req.body) {
-    return res.status(400).json({ message: 'missing fields' })
-  }
-
   const result = await contacts.updateContactById(id, req.body)
 
   if (!result) {
-    return res.status(404).json({ message: 'missing fields' })
+    return res.status(404).json({ message: 'Not found' })
   }
 
   res.json(result)
