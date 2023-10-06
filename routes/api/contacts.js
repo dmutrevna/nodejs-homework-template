@@ -8,7 +8,7 @@ const router = express.Router()
 router.get('/', ctrl.getAll)
 router.get('/:id', isValidId, ctrl.getById)
 router.post('/', validateBody(schemas.addSchema), ctrl.add)
-router.put('/:id', validateBody(schemas.addSchema), ctrl.updateById)
+router.put('/:id', validateBody(schemas.addSchema), isValidId, ctrl.updateById)
 router.delete('/:id', isValidId, ctrl.deleteContactById)
 router.patch('/:id/favorite', isValidId, ctrl.updateStatusContact)
 
