@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { handleMongooseError } = require('../helpers')
+const { handleMongooseError, runValidatorsAtUpdate } = require('./hooks.js')
 
 const contactSchema = new Schema(
   {
@@ -32,6 +32,10 @@ const contactSchema = new Schema(
 )
 
 contactSchema.post('save', handleMongooseError)
+
+contactSchema.pre('findOneAndUpdate', runValidatorsAtUpdate)
+
+contactSchema.post('findOneAndUpdate', handleMongooseError)
 
 const Contact = model('contact', contactSchema)
 
