@@ -10,7 +10,7 @@ const addSchema = Joi.object({
       minDomainSegments: 2,
     })
     .messages({
-      'any.required': 'missing required e-mail field',
+      'any.required': 'missing required email field',
     }),
   phone: Joi.string()
     .required()
@@ -19,6 +19,7 @@ const addSchema = Joi.object({
       'string.pattern.base': 'Phone number must be in format 380000000000',
       'any.required': 'missing required phone field',
     }),
+  favorite: Joi.boolean(),
 })
 
 module.exports = {
