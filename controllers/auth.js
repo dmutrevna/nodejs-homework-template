@@ -73,8 +73,6 @@ const logout = async (req, res) => {
 const updateStatusUser = async (req, res) => {
   const { subscription } = req.body
   const { _id: id } = req.user
-  console.log(req.user)
-  console.log(req.user)
 
   const updatedUser = await User.findOneAndUpdate(
     id,
@@ -86,11 +84,10 @@ const updateStatusUser = async (req, res) => {
     throw HttpError(404, 'User not found')
   }
 
+  const message = `Subscription status updated to ${updatedUser.subscription}`
   res.json({
-    user: {
-      email: updatedUser.email,
-      subscription: updatedUser.subscription,
-    },
+    message: message,
+    email: updatedUser.email,
   })
 }
 
