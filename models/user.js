@@ -3,12 +3,6 @@ const { handleMongooseError, runValidatorsAtUpdate } = require('./hooks.js')
 
 const userSchema = new Schema(
   {
-    username: {
-      type: String,
-      required: [true, 'Missing required username field'],
-      minlength: [3, 'Name should be at least 3 characters'],
-      maxlength: [30, 'Name should not exceed 30 characters'],
-    },
     email: {
       type: String,
       required: [true, 'Email is required'],
