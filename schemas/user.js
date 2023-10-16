@@ -1,9 +1,6 @@
 const Joi = require('joi')
 
 const userSignupSchema = Joi.object({
-  username: Joi.string().required().min(3).max(30).messages({
-    'any.required': 'missing required name field',
-  }),
   email: Joi.string()
     .required()
     .email({
@@ -12,7 +9,9 @@ const userSignupSchema = Joi.object({
     .messages({
       'any.required': 'missing required email field',
     }),
-  password: Joi.string().min(6).required(),
+  password: Joi.string().min(6).required().messages({
+    'any.required': 'missing required password field',
+  }),
 })
 
 const userSigninSchema = Joi.object({

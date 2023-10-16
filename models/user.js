@@ -3,15 +3,9 @@ const { handleMongooseError, runValidatorsAtUpdate } = require('./hooks.js')
 
 const userSchema = new Schema(
   {
-    username: {
-      type: String,
-      required: [true, 'Missing required name field'],
-      minlength: [3, 'Name should be at least 3 characters'],
-      maxlength: [30, 'Name should not exceed 30 characters'],
-    },
     email: {
       type: String,
-      required: [true, 'Missing required email field'],
+      required: [true, 'Email is required'],
       unique: true,
       validate: {
         validator: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
@@ -21,7 +15,7 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, 'Missing required password field'],
+      required: [true, 'Set password for user'],
       minlength: [6, 'Password should be at least 6 characters'],
       validate: {
         validator: function (value) {
@@ -30,6 +24,14 @@ const userSchema = new Schema(
         message:
           'Password should contain letters and at least one special character (!@#$%^&*)',
       },
+    },
+    subscription: {
+      type: String,
+      enum: ['starter', 'pro', 'business'],
+      default: 'starter',
+    },
+    token: {
+      type: String,
     },
   },
   { versionKey: false, timestamps: true }
