@@ -33,7 +33,7 @@ const add = async (req, res) => {
   if (!result) {
     throw HttpError(400, `message: missing required ${validData} field`)
   }
-  res.status(201).json(result)
+  res.status(204).json(result)
 }
 
 const updateById = async (req, res) => {

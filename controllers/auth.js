@@ -1,22 +1,34 @@
 require('dotenv').config()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const fs = require('fs/promises')
+const path = require('path')
+const gravatar = require('gravatar')
+const Jimp = require('jimp')
 
 const { User } = require('../models/user')
 const { HttpError, ctrlWrapper } = require('../helpers')
 
 const { JWT_SECRET } = process.env
 
+const avatarsPath = path.resolve('public', 'avatars')
+
 const register = async (req, res) => {
   const { email, password } = req.body
+
   const user = await User.findOne({ email })
   if (user) {
     throw HttpError(409, `${email} already in use`)
   }
 
   const hashPassword = await bcrypt.hash(password, 10)
+  const avatarURL = gravatar.url(email)
 
-  const newUser = await User.create({ ...req.body, password: hashPassword })
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  })
   res.status(201).json({
     user: {
       email: newUser.email,
@@ -91,10 +103,35 @@ const updateStatusUser = async (req, res) => {
   })
 }
 
+const updateAvatar = async (req, res) => {
+  try {
+    const { _id } = req.user
+    const { path: tmpUpload, originalname } = req.file
+    const fileName = `${_id}_${originalname}`
+    const resultUpload = path.join(avatarsPath, fileName)
+    await fs.rename(tmpUpload, resultUpload)
+
+    const avatarURL = path.join('avatars', fileName)
+
+    Jimp.read(resultUpload, (err, lenna) => {
+      if (err) throw err.message
+      lenna.resize(250, 250).write(resultUpload)
+    })
+
+    await User.findByIdAndUpdate(_id, { avatarURL })
+
+    res.json({ avatarURL })
+  } catch (error) {
+    await fs.unlink(req.file.path)
+    throw error
+  }
+}
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
   current: ctrlWrapper(current),
   updateStatusUser: ctrlWrapper(updateStatusUser),
+  updateAvatar: ctrlWrapper(updateAvatar),
 }
