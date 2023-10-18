@@ -1,6 +1,6 @@
 const express = require('express')
 const authCtrl = require('../../controllers/auth')
-const { validateBody, authenticate } = require('../../middlewares')
+const { validateBody, authenticate, upload } = require('../../middlewares')
 const { userSignupSchema, userSigninSchema } = require('../../schemas/user')
 
 const userSignupValidate = validateBody(userSignupSchema)
@@ -13,5 +13,11 @@ authRouter.post('/login', userSigninValidate, authCtrl.login)
 authRouter.post('/logout', authenticate, authCtrl.logout)
 authRouter.get('/current', authenticate, authCtrl.current)
 authRouter.patch('/', authenticate, authCtrl.updateStatusUser)
+authRouter.patch(
+  '/avatars',
+  authenticate,
+  upload.single('avatar'),
+  authCtrl.updateAvatar
+)
 
 module.exports = authRouter
