@@ -14,7 +14,7 @@ const userEmailValidate = validateBody(userEmailSchema)
 const authRouter = express.Router()
 
 authRouter.post('/register', userSignupValidate, authCtrl.register)
-authRouter.get('/verify/:verificationCode', authCtrl.verify)
+authRouter.get('/verify/:verificationToken', authCtrl.verify)
 authRouter.post('/verify', userEmailValidate, authCtrl.resendVerifyEmail)
 authRouter.post('/login', userSigninValidate, authCtrl.login)
 authRouter.post('/logout', authenticate, authCtrl.logout)
